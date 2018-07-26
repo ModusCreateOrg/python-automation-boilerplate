@@ -66,7 +66,7 @@ def build_case(tr, tr_project_suite, tr_suite_cases, tr_suite_section, feature, 
     # Setting Case references
     feature_refs = filter(lambda sc: '-' in sc['name'], feature['feature']['tags'])
     scenario_refs = filter(lambda sc: '-' in sc['name'], scenario['tags'])
-    raw_refs = ', '.join(tg['name'].partition('-')[2] for tg in (feature_refs + scenario_refs))
+    raw_refs = ', '.join(tg['name'].replace('@','') for tg in (feature_refs + scenario_refs))
 
     # Setting Case priority
     priority_name = 'Critical' if filter(lambda sc: 'smoke' in sc['name'], scenario['tags']) \
