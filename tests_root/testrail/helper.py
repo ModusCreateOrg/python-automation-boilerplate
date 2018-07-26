@@ -20,7 +20,6 @@ class ServiceUnavailableError(TestRailError):
 
 def methdispatch(func):
     dispatcher = singledispatch(func)
-
     def wrapper(*args, **kw):
         try:
             return dispatcher.dispatch(args[1].__class__)(*args, **kw)

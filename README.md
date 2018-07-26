@@ -4,6 +4,8 @@
 This repository serves as a boilerplate for testing web and hybrid applications using pytest-bdd.
 Branch `pytest-bdd_testrail_integration` contains the integration between automated tests and TestRail, as Test Management Tool.
 
+Note: TestRail Python wrapper sources from: [testrail-python](https://github.com/travispavek/testrail-python) repository. Updates were added for missing implementations.
+
 ### Configuration:
 Add TestRail API credentials to `./tests_root/tests/constants.json` file
 

@@ -25,7 +25,9 @@ from testrail.template import Template
 if sys.version_info >= (3, 0):
     unicode = str
 
+
 # pylint: disable=no-self-use
+# pylint: disable=too-many-public-methods
 class TestRail(object):
     def __init__(self, project_id=0, email=None, key=None, url=None):
         self.api = API(email=email, key=key, url=url)
@@ -223,8 +225,9 @@ class TestRail(object):
     # Plan Entries Methods
 
     @methdispatch
-    def plan_entry(self, content):
-        return Entry(content)
+    def plan_entry(self):
+        # pylint: disable=no-value-for-parameter
+        return Entry()
 
     @add.register(Entry)
     def add_plan_entry(self, obj, plan_id):
@@ -325,8 +328,8 @@ class TestRail(object):
     @test.register(str)
     @test.register(unicode)
     @singleresult
-    def _test_by_name(self, name):
-        return filter(lambda t: t.name.lower() == name.lower(), self.tests())
+    def _test_by_name(self, name, run):
+        return filter(lambda t: t.name.lower() == name.lower(), self.tests(run))
 
     @test.register(int)
     @singleresult
@@ -393,6 +396,7 @@ class TestRail(object):
 
     @methdispatch
     def status(self):
+        # pylint: disable=no-value-for-parameter
         return Status()
 
     @status.register(str)
@@ -412,15 +416,16 @@ class TestRail(object):
 
     @methdispatch
     def priority(self):
+        # pylint: disable=no-value-for-parameter
         return Priority()
 
-    @status.register(str)
-    @status.register(unicode)
+    @priority.register(str)
+    @priority.register(unicode)
     @singleresult
     def _priority_by_name(self, name):
         return filter(lambda s: s.name == name.lower(), self.priorities())
 
-    @status.register(int)
+    @priority.register(int)
     @singleresult
     def _priority_by_id(self, priority_id):
         return filter(lambda s: s.id == priority_id, self.priorities())
@@ -431,15 +436,16 @@ class TestRail(object):
 
     @methdispatch
     def template(self):
-        return Priority()
+        # pylint: disable=no-value-for-parameter
+        return Template()
 
-    @status.register(str)
-    @status.register(unicode)
+    @template.register(str)
+    @template.register(unicode)
     @singleresult
     def _template_by_name(self, name):
         return filter(lambda s: s.name == name.lower(), self.templates())
 
-    @status.register(int)
+    @template.register(int)
     @singleresult
     def _template_by_id(self, template_id):
         return filter(lambda s: s.id == template_id, self.templates())
@@ -450,15 +456,16 @@ class TestRail(object):
 
     @methdispatch
     def case_type(self):
+        # pylint: disable=no-value-for-parameter
         return CaseType()
 
-    @status.register(str)
-    @status.register(unicode)
+    @case_type.register(str)
+    @case_type.register(unicode)
     @singleresult
     def _case_type_by_name(self, name):
         return filter(lambda s: s.name == name.lower(), self.case_types())
 
-    @status.register(int)
+    @case_type.register(int)
     @singleresult
     def _case_type_by_id(self, case_type_id):
         return filter(lambda s: s.id == case_type_id, self.case_types())

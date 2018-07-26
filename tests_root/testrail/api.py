@@ -14,7 +14,7 @@ from retry import retry
 
 from testrail.helper import TestRailError, TooManyRequestsError, ServiceUnavailableError
 
-nested_dict = lambda: collections.defaultdict(nested_dict)
+NESTED_DICT = lambda: collections.defaultdict(NESTED_DICT)
 
 
 # pylint: disable=no-member
@@ -25,9 +25,9 @@ class UpdateCache(object):
     def __init__(self, cache):
         self.cache = cache
 
-    def __call__(self, f):
+    def __call__(self, func):
         def wrapped_f(*args, **kwargs):
-            api_resp = f(*args, **kwargs)
+            api_resp = func(*args, **kwargs)
             if isinstance(api_resp, dict) and not api_resp:
                 # Empty dict, indicating something at args[-1] was deleted.
                 self._delete_from_cache(args[-1])
@@ -66,13 +66,13 @@ class UpdateCache(object):
         # Make update_obj a list if it isn't already
         update_list = update_obj if isinstance(update_obj, list) else [update_obj, ]
 
-        for update_obj in update_list:
-            if 'project_id' in update_obj:
+        for update_elem in update_list:
+            if 'project_id' in update_elem:
                 # Most response objects have a project_id
-                obj_key = update_obj['project_id']
-            elif 'test_id' in update_obj:
+                obj_key = update_elem['project_id']
+            elif 'test_id' in update_elem:
                 # Results have no project_id and are cached based on test_id
-                obj_key = update_obj['test_id']
+                obj_key = update_elem['test_id']
             else:
                 raise TestRailError("Unknown object type; can't update cache")
 
@@ -82,34 +82,34 @@ class UpdateCache(object):
 
             obj_list = self.cache[obj_key]['value']
             for index, obj in enumerate(obj_list):
-                if obj['id'] == update_obj['id']:
-                    obj_list[index] = update_obj
+                if obj['id'] == update_elem['id']:
+                    obj_list[index] = update_elem
                     break
             else:
                 # If we get this far, it means we searched all objects without
                 # finding a match. Add the object
-                obj_list.append(update_obj)
+                obj_list.append(update_elem)
                 obj_list.sort(key=lambda x: x['id'])
 
 
 class API(object):
     _config = None
     _ts = datetime.now() - timedelta(days=1)
-    _shared_state = {'_case_types': nested_dict(),
-                     '_cases': nested_dict(),
-                     '_configs': nested_dict(),
-                     '_milestones': nested_dict(),
-                     '_plans': nested_dict(),
-                     '_priorities': nested_dict(),
-                     '_templates': nested_dict(),
-                     '_projects': nested_dict(),
-                     '_results': nested_dict(),
-                     '_runs': nested_dict(),
-                     '_sections': nested_dict(),
-                     '_statuses': nested_dict(),
-                     '_suites': nested_dict(),
-                     '_tests': nested_dict(),
-                     '_users': nested_dict(),
+    _shared_state = {'_case_types': NESTED_DICT(),
+                     '_cases': NESTED_DICT(),
+                     '_configs': NESTED_DICT(),
+                     '_milestones': NESTED_DICT(),
+                     '_plans': NESTED_DICT(),
+                     '_priorities': NESTED_DICT(),
+                     '_templates': NESTED_DICT(),
+                     '_projects': NESTED_DICT(),
+                     '_results': NESTED_DICT(),
+                     '_runs': NESTED_DICT(),
+                     '_sections': NESTED_DICT(),
+                     '_statuses': NESTED_DICT(),
+                     '_suites': NESTED_DICT(),
+                     '_tests': NESTED_DICT(),
+                     '_users': NESTED_DICT(),
                      '_timeout': 30,
                      '_project_id': None}
 
@@ -313,11 +313,9 @@ class API(object):
 
     def case_type_with_id(self, case_type_id):
         try:
-            return list(filter(
-                    lambda x: x['id'] == case_type_id, self.case_types()))[0]
+            return list(filter(lambda x: x['id'] == case_type_id, self.case_types()))[0]
         except IndexError:
-            return TestRailError(
-                    "Case Type ID '%s' was not found" % case_type_id)
+            return TestRailError("Case Type ID '%s' was not found" % case_type_id)
 
     # Milestone Requests
     def milestones(self, project_id):
@@ -333,11 +331,9 @@ class API(object):
             return self._get('get_milestone/%s' % milestone_id)
         else:
             try:
-                return list(filter(lambda x: x['id'] == milestone_id,
-                                   self.milestones(project_id)))[0]
+                return list(filter(lambda x: x['id'] == milestone_id, self.milestones(project_id)))[0]
             except IndexError:
-                raise TestRailError(
-                        "Milestone ID '%s' was not found" % milestone_id)
+                raise TestRailError("Milestone ID '%s' was not found" % milestone_id)
 
     @UpdateCache(_shared_state['_milestones'])
     def add_milestone(self, milestone):
@@ -367,8 +363,7 @@ class API(object):
 
     def priority_with_id(self, priority_id):
         try:
-            return list(filter(
-                    lambda x: x['id'] == priority_id, self.priorities()))[0]
+            return list(filter(lambda x: x['id'] == priority_id, self.priorities()))[0]
         except IndexError:
             raise TestRailError("Priority ID '%s' was not found")
 
@@ -383,8 +378,7 @@ class API(object):
 
     def template_with_id(self, template_id):
         try:
-            return list(filter(
-                    lambda x: x['id'] == template_id, self.priorities()))[0]
+            return list(filter(lambda x: x['id'] == template_id, self.priorities()))[0]
         except IndexError:
             raise TestRailError("Priority ID '%s' was not found")
 
@@ -393,8 +387,7 @@ class API(object):
         project_id = project_id or self._project_id
         if self._refresh(self._sections[project_id][suite_id]['ts']):
             params = {'suite_id': suite_id} if suite_id != -1 else None
-            _sections = self._get(
-                    'get_sections/%s' % project_id, params=params)
+            _sections = self._get('get_sections/%s' % project_id, params=params)
             self._sections[project_id][suite_id]['value'] = _sections
             self._sections[project_id][suite_id]['ts'] = datetime.now()
         return self._sections[project_id][suite_id]['value']
@@ -444,7 +437,6 @@ class API(object):
 
     # can't @UpdateCache b/c it doesn't include project_id
     def add_plan_entry(self, plan_entry, plan_id):
-        project_id = self._project_id
         fields = ['suite_id', 'name', 'description', 'assignedto_id',
                   'include_all', 'case_ids', 'config_ids', 'runs']
         payload = self._payload_gen(fields, plan_entry)
