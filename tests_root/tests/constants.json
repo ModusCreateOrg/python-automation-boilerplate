@@ -1,0 +1,14 @@
+{
+  "driver": {
+    "implicit_wait_time": 10,
+    "timeout": 30
+  },
+  "project": {
+    "suites": {
+      "eula_agreement": "End User License Agreement (EULA)"
+    },
+    "tags":"automated",
+    "language": "en",
+    "market": "us"
+  }
+}
