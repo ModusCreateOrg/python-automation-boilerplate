@@ -6,10 +6,6 @@ from os import path, environ
 def get_project_params():
     raw_data = read_file('constants.json')
     project_data = {
-        'id': raw_data['project']['id'],
-        'name': raw_data['project']['name'],
-        'test_plan': environ.get('test_plan') or raw_data['project']['test_plan'],
-        'env': environ.get('test_env') or raw_data['project']['env'],
         'suites': raw_data['project']['suites'],
         'tags': environ.get('test_tags') or raw_data['project']['tags'],
         'language': environ.get('project_language') or raw_data['project']['language'],
