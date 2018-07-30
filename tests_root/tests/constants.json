@@ -35,8 +35,8 @@
     "market": "us"
   },
   "testrail": {
-    "user_email": "sergiu.popescu@moduscreate.com",
-    "user_key": "h6YTZCCNlfYQWgXdmPuV-omD7OXCK0gHb9vOv9ro0",
+    "user_email": "",
+    "user_key": "",
     "url": "http://moduscreateinc.testrail.io",
     "verify_ssl": "true",
     "not_publish_results": true
