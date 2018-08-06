@@ -1,9 +1,4 @@
-# ModusCreateOrg GitHub Guidelines
-This repository serves as a collection of useful scripts, configuration files, and settings for GitHub repositories.
-
-> Modus Create team members should refer to [ModusCreateOrg GitHub Guidelines](https://docs.google.com/document/d/1eBFta4gP3-eZ4Gcpx0ww9SHAH6GrOoPSLmTFZ7R8foo/edit#heading=h.sjyqpqnsjmjl)
-
-[![Modus Create](./images/modus.logo.svg)](https://moduscreate.com)
+# Python Automation Boilerplate
 
 ### Dependencies:
 `Node` , `XCode` , `Android Studio`
@@ -92,3 +87,18 @@ In case you run in any issues with the above steps below are a set of tips for c
   - save the change
   - type `source .bash_profile` to make the changes available in the current terminal session
   - run `appium-doctor` to verify it looks good
+  
+
+## Modus Create
+
+[Modus Create](https://moduscreate.com) is a digital product consultancy. We use a distributed team of the best talent in the world to offer a full suite of digital product design-build services; ranging from consumer facing apps, to digital migration, to agile development training, and business transformation.
+
+[![Modus Create](https://res.cloudinary.com/modus-labs/image/upload/h_80/v1533109874/modus/logo-long-black.png)](https://moduscreate.com)
+
+This project is part of [Modus Labs](https://labs.moduscreate.com).
+
+[![Modus Labs](https://res.cloudinary.com/modus-labs/image/upload/h_80/v1531492623/labs/logo-black.png)](https://labs.moduscreate.com)
+
+## Licensing
+
+This project is [MIT licensed](./LICENSE).
