@@ -179,7 +179,7 @@ Note: Please follow instructions for generating user_key: http://docs.gurock.com
   - Do **NOT** use *And* and *But* keys as it will fail the match of test cases during results publishing
   
 ### Publish test results to TestRail
-####Prerequisites: 
+#### Prerequisites: 
 ##### 1. Create Test Plan in TestRail
 - You have to manually create the test plan in TestRail
   - Naming convention: [JIRA_PROJECT_NAME]_[SPRINT_NAME]_[MARKET]
