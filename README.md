@@ -1,5 +1,8 @@
 # Python Automation Boilerplate
 
+## Description:
+This is a boilerplate for testing web & mobile hybrid apps on both iOS & Android.
+
 ### Dependencies:
 `Node` , `XCode` , `Android Studio`
 
@@ -87,7 +90,7 @@ In case you run in any issues with the above steps below are a set of tips for c
   - save the change
   - type `source .bash_profile` to make the changes available in the current terminal session
   - run `appium-doctor` to verify it looks good
-  
+
 
 ## Modus Create
 
