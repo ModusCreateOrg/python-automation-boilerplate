@@ -1,159 +1,158 @@
 # Python Automation Boilerplate
+python 3.7.1, pytest, pytest-bdd, selenium, appium
 
 ## Description:
-This is a boilerplate for testing web & mobile hybrid apps on both iOS & Android.
+This is a boilerplate for testing web & mobile hybrid apps on Windows, Mac, iOS & Android.
 
 ### Dependencies:
-`Node` , `XCode` , `Android Studio`
+`Node` , `XCode` , `Android Studio`<br />
+`Python`, `pip`, `pyenv`, `virtualenv`<br />
 
 ### Installation Steps
-In order to get the tests to run locally, you need to install the following pieces of software:
+In order to get the tests to run locally, you need to install the following pieces of software.<br />
+**NOTE: **All commands shall be executed from Automation Project root directory:<br />
 
 #### MacOS
-1. `homebrew` - install using `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
-2. `pyenv` - install using `brew install pyenv` This is a python version manager
-3. `python 2.7.6` - install using `pyenv install 2.7.6`
-4. `pyenv global 2.7.6` - Set python version 2.7.6 to be used globally
-  
-    Add the following to *~/.bash_profile* 
-    ```# Pyenv
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="$PYENV_ROOT/bin:$PATH"
-    export PATH="$PYENV_ROOT/shims:$PATH"
-    export PATH="$PYENV_ROOT/completions/pyenv.bash:$PATH"
+1. Install Homebrew with `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+ 1.1. Fix commandline `sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /`
+2. Install Pyenv with `brew install pyenv` This is a python version manager.<br />
+   Add the following to *~/.bash_profile* 
+   ```# Pyenv
+   export PYENV_ROOT="$HOME/.pyenv"
+   export PATH="$PYENV_ROOT/bin:$PATH"
+   export PATH="$PYENV_ROOT/shims:$PATH"
+   export PATH="$PYENV_ROOT/completions/pyenv.bash:$PATH"
     ```
-5. `pytest` - install using `pip install pytest`
-6. `pytest_bdd` - install using `pip install pytest-bdd`
-7. `pylint` - install using `pip install pylint`
-8. `Appium-Python-Client` - install using `pip install Appium-Python-Client`
-9. `carthage` - install using `brew install carthage`
-10. This setup assumes that node is already installed on your system, if not please download the precompiled package from https://nodejs.org/en/download/ (select `Latest LTS Version`)
-11. `appium` - install using `npm install -g appium@1.7.2` (Using v1.7.2 as this is the latest version ADF supports at this moment)
-12. SKIPPED. Not working on ADF. requests[security] - install using `pip install requests[security]`    
-13. `pip install Faker future gherkin-official python-dateutil pyyaml requests retry`
+3. Install python 3.7.1 with `pyenv install 3.7.1`
+4. Set python version 3.7.1 to be used globally with `pyenv global 3.7.1`
+5. Install virtualenv with `python3 -m pip install --user virtualenv`
+6. Create new virtual env with `python3 -m virtualenv .venv_bpd`
+7. Activate new virtual env with `source ./.venv_bpd/bin/activate`
+8. Install all project dependencies with `pip install -r requirements.txt`
+9. Check python version used with `which python`. <br />
+   Shall be `[PROJECT_DIR]/tests/UI/.venv_bpd/bin/python`
+10. `carthage` - install using `brew install carthage`
+11. **NOTE:** This setup assumes that node is already installed on your system, if not please download the precompiled package from https://nodejs.org/en/download/ (select `Latest LTS Version`)
+12. `appium` - install using `npm install -g appium`
 
 ### Windows
 1. TODOs
 
-### Run all the tests locally
-In order to start the tests, you have to start Appium in another terminal window. To do that run ```appium```
+## Test execution
 
-The mobile application needs to be built (follow the steps from your project)
+### Execution prerequisites
+- Start the app locally. Please enable `--host=bs-local.com` and `--port=8080`
+- Start BrowserStack local (only for BrowserStack execution) ```./BrowserStackLocal --daemon start --key  [ACCESS_KEY]```<br />
+  For more info please see: https://www.browserstack.com/local-testing#command-line
 
-_Note_
-  - for iOS builds take the _.app_ folder, and zip it, then enter the path to the zipped file in _conf_driver.py_
-  - for Android builds, you should have the _.apk_ file available after running the _ionic cordova build android_ command
+### Local Terminal run
+ - Chrome example:
+  ```
+  python -m pytest -vv --gherkin-terminal-reporter --export_results --driver Chrome --driver-path ./selenium_drivers/chromedriver_mac --capability base_url http://localhost:8100 --tags="" --variables variables.json
+  ```
+ - Appium example:
+  ```
+  python -m pytest vv --gherkin-terminal-reporter --driver Appium --appium-capability app ./android-debug.apk --appium-capability platformName Android --appium-capability platformVersion '7.0' --appium-capability deviceName device --variables variables.json
+  ```
+  
+### Parallel testing
+ - Just add the `-n=3 --dist=loadscope` args and remove `--gherkin-terminal-reporter` as this reporting type is not compatible with parallel testing
+  NOTE: 
+   `n=3` means 3 parallel tests
+   `dist=loadscope` means that parallelism is done at *.feature*s file level
 
-Then simply go to the _tests_root_ folder and run - `py.test -vv --gherkin-terminal-reporter --not_publish_results True`
-
-Flag ```--not_publish_results True``` will make it sure that test runned locally will not be published to TestRail 
-
-### Run specific tests(feature) file
-Difference here is in listing *.feature* file, which will afterwards run only tests of those feature files listed.
-- Go to *tests_root/tests/constants.json*
-- Edit *suites* with feature file(s) you would like to run. eg:
-
-  - ```
-    "project": {
-      "id": 1,
-      "name": "MC",
-      "test_plan": "MC_Sprint_1",
-      "env": "Apple iPhone 8Plus_iOS-11.0",
-      "suites": {
-          "calculator": "Calculator",
-          "eula_welcome_screen": "EULA - Welcome Screen"
-      },
-      "tags":"",
-      "language": "en",
-      "market": "us"
-    }
-    
- - After setting this up, you can run: `py.test -vv --gherkin-terminal-reporter --not_publish_results True`. But before that, read all of the below explained.    
- - *suites* can contain a list of Test Suites (.feature files) to be added to the run and results publish
-
-- Info:
-    - **suites** = if empty all tests will be executed. 
-    - **tags** = further filtering
-    - **language** = **mandatory**, taking string from i18n.json for selected language  
-    - **market** = **mandatory**, in order to know for which market to trigger tests
-### Run on real devices:
-#### iOS
-- `brew install libimobiledevice`
-- `npm install -g ios-deploy`
-
-### Lint code
+### Create PyCharm Run Configurations
+1. Edit Configurations > + > Python Tests > pytest
+- Chrome
+```
+Script Path = [UI_TESTS_PATH]
+Additional Arguments = -vv --gherkin-terminal-reporter --driver Chrome --driver-path ./selenium_drivers/chromedriver_mac --variables variables.json
+Python Interpreter = 'Previously created virtualenv'
+Working Directory = [UI_TESTS_PATH]
+```
+- Firefox
+```
+Script Path = [UI_TESTS_PATH]
+Additional Arguments = -vv --gherkin-terminal-reporter --driver Firefox --driver-path ./selenium_drivers/geckodriver_mac --variables variables.json
+Python Interpreter = 'Previously created virtualenv'
+Working Directory = [UI_TESTS_PATH]
+```
+ - BrowserStack execution arguments based on env (just replace 'Additional Arguments' with correct value:
+ ```
+ Android App: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'Google Pixel 3 XL' --capability os_version '9.0' --capability app 'bs://[app_ID]' --capability browserstack.appium_version '1.10.0' --variables variables.json
+ Android Web: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'Google Pixel 3 XL' --capability os_version '9.0' --capability base_url http://localhost:9002 --variables variables.json
+ iOS App: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'iPhone XS' --capability os_version '12.0' --capability app 'bs://[app_ID]' --capability browserstack.appium_version '1.10.0' --variables variables.json
+ iOS Web: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability device 'iPad Pro 12.9 2018' --capability os_version '12.0' --capability base_url http://bs-local.com:8080 --variables variables.json
+ IE: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'IE' --capability browser_version '11' --capability base_url http://localhost:8080 --variables variables.json 
+ Edge: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'Edge' --capability browser_version '18.0' --capability base_url http://localhost:8080 --variables variables.json
+ Chrome: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'Chrome' --capability browser_version '72' --capability base_url http://localhost:8080 --variables variables.json
+ Safari: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'OS X' --capability os_version 'Mojave' --capability browser 'Safari' --capability browser_version '12.0' --capability base_url http://bs-local.com:8080 --variables variables.json
+ ```
+2. Run or Debug with the above configurations
+  
+## Code Quality
 Linting = the process of analyzing the source code to flag programming errors, bugs, stylistic errors, and suspicious constructs.
 
 **IMPORTANT:** Lint your code before any commit
 
   - Go to _tests_root_ folder
-  - Run `pylint ./tests`
+  - Run `pylint ./**/**.py`
   - There should be only one Error: `E:  4, 0: invalid syntax (<string>, line 4) (syntax-error)`
     - This is due to a _pylint_ issue: root files or folders cannot be ignored from linting. Will follow the fix
     - A rating above 9.00 should be kept for the code
 
-### Package tests for ADF
-**Prerequisites for ADF**: `constants.json` filled (See `Publish test results to TestRail` section and see `TestRail-Integration, Dependencies` section)
-1. Install Docker Community Edition from https://docker.com
-2. Go to _ubuntu_docker_ folder
-3. Create Docker from _ubuntu_docker_ folder
-    1. `docker build -t ubuntu_01:v0.1 ./` - builds the docker image with name _ubuntu_01_
-    2. `docker image ls -a` - lists all docker images
-        - this should output 2 images one being _ubuntu_01_
-        - to save the image `docker save ubuntu_01 > ubuntu_01.tar`
-        - to load a saved image `docker load --input ubuntu_01.tar`
-    3. `docker create -v [ABSOLUTE_PATH]/tests_root:/media/tests_root --name ubuntu_01 [DOCKER_IMAGE_ID]` - create docker container based on image
-    4. `docker container ls -a` - lists all docker containers
-    4. `docker start [DOCKER_CONTAINER_ID]` - starts docker container with id
-    5. `docker exec -it [DOCKER_CONTAINER_ID] sh` - opens sh terminal within running docker container
-    6. `cd media/tests_root`
-    7. `sh package_tests.sh`
+## Package tests for CI
+TODO
 
-### TODOs
-  - run pytest with parameters - tags
+# Browserstack Configuration:
+Add TestRail API credentials to `./.browserstack` file
 
- 
-# TestRail-Integration
+```
+[credentials]
+username=TODO
+key=TODO
+```
+
+# TestRail Integration
 This is HOW TO guide for TestRail integration of this project 
 
-### Configuration:
-Add TestRail API credentials to `./tests_root/tests/constants.json` file
+## Configuration:
+Add TestRail API credentials to `./.testrailapi` file
 
 ```
-"testrail": {
-  "user_email": "",
-  "user_key": "",
-  "url": "https://[SUBDOMAIN].testrail.io",
-  "verify_ssl": "true"
-}
+[credentials]
+email=TODO
+key=TODO
+url=https://moduscreateinc.testrail.io
+verify_ssl=True
 ```
-
 Note: Please follow instructions for generating user_key: http://docs.gurock.com/testrail-api2/accessing
 
 **!DO NOT PUSH your credentials into git repo**
   
-### Publish test cases to TestRail
-- Go to *tests_root/*
+## Export test cases to TestRail
+- From project root directory
 - Run: 
 
 **To import/update test Scenarios for ALL feature files**
-- ```py.test -vv --not_publish_results True --publish True --object_path "tests/features"```
+- ```python -m pytest -vv --export_tests_path "features" --variables variables.json```
  
- **To import/update test Scenarios for INDIVIDUAL .feature file**
-- ```py.test -vv --not_publish_results True --publish True --object_path "tests/features/[FILE_NAME].feature"``` 
+**To import/update test Scenarios for INDIVIDUAL .feature file**
+- ```python -m pytest -vv --export_tests_path "features/[DIR_NAME]/[FILE_NAME].feature" --variables variables.json``` 
 
-### Implementation details
+## Implementation details
 - Each *.feature* file is a product functionality
-  - Unique key is the pair of **feature name** + **feature description**
+  - Unique key is the pair of **Feature Name - Functionality** + **feature description**
   ```gherkin
-   Feature: End User License Agreement (EULA)
-     As a Quitter
+   Feature: Create User - Email registration
+     As an anonymous user
      I open the app for the first time
-     I want to be able to view and accept the terms and conditions and privacy policy.
+     I want to be able to register with email
   ```
-  - It will create a new **test suite** for each *.feature* file published
-  - If **test suite** was imported it will update all the tests within
-- Each *Scenario* is a TestRail *case*
+  - It will create a new **Test Suite** for each unique *Feature Name* file published
+  - It will create a new **Section** within the **Test Suite** for each unique **Functionality**
+  - If **test suite** was previously imported it will update all the tests within
+- Each *Scenario* is a TestRail *Case*
   - Unique key is pair of **scenario name** + **data set** (The Examples line in json format)
   ```gherkin
   Scenario: Add two numbers
@@ -171,63 +170,48 @@ Note: Please follow instructions for generating user_key: http://docs.gurock.com
   - If **case** was imported it will update it with latest changes
   - Scenario *tags*:
     - **@automation** = **case** is automated
-    - **@LWH-1** = **case ref** to Jira ticket (the feature ticket)
+    - **@JIRA-1** = **case ref** to Jira ticket (the feature ticket)
     - **@smoke** / **@sanity** / **@regression** / **None** = **case priority** Critical / High / Medium / Low
     - **@market_us** = **case** is for USA market
     - **@not_market_ca** = **case** is not for Canada market
   - *Steps* are imported as separate ones with empty *Expected Results*
   - Do **NOT** use *And* and *But* keys as it will fail the match of test cases during results publishing
   
-### Publish test results to TestRail
-#### Prerequisites: 
-##### 1. Create Test Plan in TestRail
+## Publish test results to TestRail
+###Prerequisites: 
+#### 1. Create Test Plan in TestRail
 - You have to manually create the test plan in TestRail
-  - Naming convention: [JIRA_PROJECT_NAME]_[SPRINT_NAME]_[MARKET]
-    - eg: *LWH_Sprint-1_us* or *LWH_Regression_us*
-  - Test Plan can be empty
-    - Automated tests will create Test Runs for each Test Suite that exists and is in scope of testing: See: *project.suites*
-    - Test Run name: [TEST_SUITE_NAME] [ENV]
-      - eg: *EULA - Welcome Screen iPhone8_iOS-11.4*
-    - If Test Run is present it will only add a new set of results with the current timestamp
+  - Naming convention: [JIRA_PROJECT_NAME]_[SPRINT_NAME]_[MARKET] - MARKET only if applied
+    - eg: *JIRA_Sprint-1_us* or *JIRA_Regression_us*
+  - Test Plan shall contain all Cases that you want to execute within the session
+  - The correct configuration shall be present. This is described by *variables.json* in *env*
   - Test results are published to TestRail at the end of testing
     - The reason of failure is also added to the test step
 
-##### 2. Test run details in `project`
-- Go to *tests_root/tests/constants.json*
+#### 2. Test run details in `project`
+- Go to *variables.json*
   - Edit *project* with corresponding data. eg:
   - ```
     "project": {
       "id": 1,
-      "name": "LWH",
-      "test_plan": "LWH_Sprint_1",
-      "env": "Apple iPhone 8Plus_iOS-11.0",
-      "suites": {
-          "calculator": "Calculator",
-          "eula_welcome_screen": "EULA - Welcome Screen"
-      },
-      "tags":"",
+      "name": "JIRA",
       "language": "en",
+      "tags":"",
+      "test_plan": "JIRA_Sprint_1",
       "market": "us"
     }
-  - *suites* can contain a list of Test Suites (.feature files) to be added to the run and results publish
-  - If *suites* is left empty then all the available suites (.feature files) will be ran and results published for that environment
   
   - Info
     - **id** = **mandatory**, taken from TestRail, is the id of the project. Can be picked up from url in TestRail. Make sure id is correct.
     - **name** = **mandatory**, name of the project you will publish to.
+    - **tags** = **optional**, filtering scenarios by required parameters
     - **test_plan** = **mandatory**, title of the test plan created manually in TestRail
-    - **env** = **mandatory**, device name that will be displayed upon published test run result
-    - **suites** = if empty all tests will be executed. 
-    - **tags** = further filtering
     - **language** = **mandatory**, taking string from i18n.json for selected language  
-    - **market** = **mandatory**, in order to know for which market to trigger tests
+    - **market** = **optional**, in order to know for which market to trigger tests
 
-##### Run test locally and publish to TestRail
-- Go to *tests_root/*
-- Run: 
- - ```py.test -vv --gherkin-terminal-reporter``` - this will run and publish tests results
-- **NOTE:** To avoid publishing results (for local scope) ```py.test -vv --gherkin-terminal-reporter --not_publish_results True```
-
+#### Run test locally and publish results to TestRail
+- Add the following argument to CLI
+   - ```--export_results``` - this will run and publish tests results
 
 ## Notes
 ### Tips and Tricks
@@ -251,7 +235,7 @@ In case you run in any issues with the above steps below are a set of tips for c
         ```
         npm uninstall -g appium
         npm install -g appium-doctor
-        npm install -g appium@1.7.1
+        npm install -g appium
         appium-doctor //checks your appium installation
         ```
     - 3rd if none of the above work then you can try the following
