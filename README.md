@@ -4,15 +4,15 @@ python 3.7.1, pytest, pytest-bdd, selenium, appium
 ## Description:
 This is a boilerplate for testing web & mobile hybrid apps on Windows, Mac, iOS & Android.
 
-### Dependencies:
+## Dependencies:
 `Node` , `XCode` , `Android Studio`<br />
 `Python`, `pip`, `pyenv`, `virtualenv`<br />
 
-### Installation Steps
+## Installation Steps
 In order to get the tests to run locally, you need to install the following pieces of software.<br />
 **NOTE: **All commands shall be executed from Automation Project root directory:<br />
 
-#### MacOS
+### MacOS
 1. Install Homebrew with `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
  1.1. Fix commandline `sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /`
 2. Install Pyenv with `brew install pyenv` This is a python version manager.<br />
@@ -35,7 +35,7 @@ In order to get the tests to run locally, you need to install the following piec
 11. **NOTE:** This setup assumes that node is already installed on your system, if not please download the precompiled package from https://nodejs.org/en/download/ (select `Latest LTS Version`)
 12. `appium` - install using `npm install -g appium`
 
-### Windows
+## Windows
 1. TODOs
 
 ## Test execution
@@ -49,16 +49,17 @@ In order to get the tests to run locally, you need to install the following piec
 ### Local Terminal run
  - Chrome example:
   ```
-  python -m pytest -vv --gherkin-terminal-reporter --export_results --driver Chrome --driver-path ./selenium_drivers/chromedriver_mac --capability base_url http://localhost:8100 --tags="" --variables variables.json --variables i18n.json
+  python -m pytest -vv --gherkin-terminal-reporter --driver Chrome --driver-path ./selenium_drivers/chromedriver_mac --capability base_url http://localhost:8100 --tags="" --variables variables.json --variables i18n.json
   ```
  - Appium example:
   ```
-  python -m pytest vv --gherkin-terminal-reporter --driver Appium --appium-capability app ./android-debug.apk --appium-capability platformName Android --appium-capability platformVersion '7.0' --appium-capability deviceName device --variables variables.json --variables i18n.json
+  python -m pytest -vv --gherkin-terminal-reporter --driver Appium --appium-capability app ./[APP_NAME].apk --appium-capability platformName Android --appium-capability platformVersion '7.0' --appium-capability deviceName device --capability env Android --capability os_version 7.0 --tags="" --variables variables.json --variables i18n.json
   ```
  - Custom Driver example:
   ```
-  -vv --gherkin-terminal-reporter --disable-pytest-warnings --driver Custom_Driver --driver-impl appium --appium-capability app ... --appium-capability platformName Android --appium-capability platformVersion '7.0' --capability env Android --capability os_version 7.0 --appium-capability deviceName device  --tags="" --variables variables.json --variables i18n.json
-  ``` 
+  python -m pytest -vv --gherkin-terminal-reporter --driver Custom_Driver --driver-impl appium --appium-capability app ./[APP_NAME].apk --appium-capability platformName Android --appium-capability platformVersion '7.0'--appium-capability deviceName device --capability env Android --capability os_version 7.0 --tags="" --variables variables.json --variables i18n.json
+  python -m pytest -vv --gherkin-terminal-reporter --driver Appium --appium-capability browserName Chrome --appium-capability base_url https://beep.modus.app --appium-capability platformName Android --appium-capability platformVersion '7.0' --appium-capability deviceName device --tags="" --variables variables.json --variables i18n.json
+  ```
   
 ### Parallel testing
  - Just add the `-n=3 --dist=loadscope` args and remove `--gherkin-terminal-reporter` as this reporting type is not compatible with parallel testing
@@ -87,11 +88,11 @@ Working Directory = [UI_TESTS_PATH]
  Android App: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'Google Pixel 3 XL' --capability os_version '9.0' --capability app 'bs://[app_ID]' --capability browserstack.appium_version '1.10.0' --variables variables.json --variables i18n.json
  Android Web: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'Google Pixel 3 XL' --capability os_version '9.0' --capability base_url http://localhost:9002 --variables variables.json --variables i18n.json
  iOS App: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'iPhone XS' --capability os_version '12.0' --capability app 'bs://[app_ID]' --capability browserstack.appium_version '1.10.0' --variables variables.json --variables i18n.json
- iOS Web: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability device 'iPad Pro 12.9 2018' --capability os_version '12.0' --capability base_url http://bs-local.com:8080 --variables variables.json --variables i18n.json
- IE: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'IE' --capability browser_version '11' --capability base_url http://localhost:8080 --variables variables.json --variables i18n.json
- Edge: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'Edge' --capability browser_version '18.0' --capability base_url http://localhost:8080 --variables variables.json --variables i18n.json
- Chrome: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'Chrome' --capability browser_version '72' --capability base_url http://localhost:8080 --variables variables.json --variables i18n.json
- Safari: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'OS X' --capability os_version 'Mojave' --capability browser 'Safari' --capability browser_version '12.0' --capability base_url http://bs-local.com:8080 --variables variables.json --variables i18n.json
+ iOS Web: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'iPad Pro 12.9 2018' --capability os_version '12.0' --capability base_url http://bs-local.com:8080 --variables variables.json --variables i18n.json
+ IE: -vv --gherkin-terminal-reporter --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'IE' --capability browser_version '11' --capability base_url http://localhost:8080 --variables variables.json --variables i18n.json
+ Edge: -vv --gherkin-terminal-reporter --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'Edge' --capability browser_version '18.0' --capability base_url http://localhost:8080 --variables variables.json --variables i18n.json
+ Chrome: -vv --gherkin-terminal-reporter --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'Chrome' --capability browser_version '72' --capability base_url http://localhost:8080 --variables variables.json --variables i18n.json
+ Safari: -vv --gherkin-terminal-reporter --driver BrowserStack --capability os 'OS X' --capability os_version 'Mojave' --capability browser 'Safari' --capability browser_version '12.0' --capability base_url http://bs-local.com:8080 --variables variables.json --variables i18n.json
  ```
 2. Run or Debug with the above configurations
   
@@ -214,14 +215,14 @@ Note: Please follow instructions for generating user_key: http://docs.gurock.com
     - **language** = **mandatory**, taking string from i18n.json for selected language  
     - **market** = **optional**, in order to know for which market to trigger tests
 
-#### Run test locally and publish results to TestRail
+### Run tests and publish results to TestRail
 - Add the following argument to CLI
    - ```--export_results``` - this will run and publish tests results
 
 ## Notes
 ### Tips and Tricks
-To benefit from autocomplete please set *tests_root* folder as **Sources Root**
- - Right click on *tests_root_*
+To benefit from autocomplete please set *tests* folder as **Sources Root**
+ - Right click on *tests*
  - Click on *Mark Directory As*
  - Click on *Sources Root*
 
