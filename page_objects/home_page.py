@@ -10,7 +10,6 @@ class HomePage(BasePage):
 
     def __init__(self, selenium, base_url, i18n):
         super().__init__(selenium, base_url)
-        self.base_url = base_url
         self.i18n = i18n
         self.page_url = ''
 

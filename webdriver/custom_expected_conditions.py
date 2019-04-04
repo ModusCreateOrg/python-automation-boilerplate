@@ -8,10 +8,9 @@ class is_webview_present:
 
     def __call__(self, driver):
         print('Printing app contexts: ' + ' / '.join(self.driver.contexts))
-        if self.driver.desired_capabilities['platformName'].lower() == 'ios':
+        if self.driver.desired_capabilities['platformName'].lower() == 'android'\
+                or self.driver.desired_capabilities['platformName'].lower() == 'ios':
             return any('WEBVIEW_' in context for context in self.driver.contexts)
-        if self.driver.desired_capabilities['platformName'].lower() == 'android':
-            return any('WEBVIEW_com.pfizer' in context for context in self.driver.contexts)
         return None
 
 

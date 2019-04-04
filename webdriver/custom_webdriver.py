@@ -24,11 +24,7 @@ class WebDriverCustom(webdriver.Remote):
     def switch_to_webview_context(self):
         wait = WebDriverWait(self, 60)
         wait.until(is_webview_present(self), 'WEBVIEW context initialization failed')
-        webview_context = None
-        if self.desired_capabilities['platformName'].lower() == 'ios':
-            webview_context = next(context for context in self.contexts if 'WEBVIEW_' in context)
-        if self.desired_capabilities['platformName'].lower() == 'android':
-            webview_context = next(context for context in self.contexts if 'WEBVIEW_com.pfizer' in context)
+        webview_context = next(context for context in self.contexts if 'WEBVIEW_' in context)
         # pylint: disable=no-member
         self.switch_to.context(webview_context)
 

@@ -43,17 +43,22 @@ In order to get the tests to run locally, you need to install the following piec
 ### Execution prerequisites
 - Start the app locally. Please enable `--host=bs-local.com` and `--port=8080`
 - Start BrowserStack local (only for BrowserStack execution) ```./BrowserStackLocal --daemon start --key  [ACCESS_KEY]```<br />
+- For hybrid / mobile testing upload the build file by using: ```curl -u "[BS_USERNAME]:[BS_SECRET_KEY]" -X POST https://api-cloud.browserstack.com/app-automate/upload -F "file=@/path/to/app/file/[BUILD_FILE]"```
   For more info please see: https://www.browserstack.com/local-testing#command-line
 
 ### Local Terminal run
  - Chrome example:
   ```
-  python -m pytest -vv --gherkin-terminal-reporter --export_results --driver Chrome --driver-path ./selenium_drivers/chromedriver_mac --capability base_url http://localhost:8100 --tags="" --variables variables.json
+  python -m pytest -vv --gherkin-terminal-reporter --export_results --driver Chrome --driver-path ./selenium_drivers/chromedriver_mac --capability base_url http://localhost:8100 --tags="" --variables variables.json --variables i18n.json
   ```
  - Appium example:
   ```
-  python -m pytest vv --gherkin-terminal-reporter --driver Appium --appium-capability app ./android-debug.apk --appium-capability platformName Android --appium-capability platformVersion '7.0' --appium-capability deviceName device --variables variables.json
+  python -m pytest vv --gherkin-terminal-reporter --driver Appium --appium-capability app ./android-debug.apk --appium-capability platformName Android --appium-capability platformVersion '7.0' --appium-capability deviceName device --variables variables.json --variables i18n.json
   ```
+ - Custom Driver example:
+  ```
+  -vv --gherkin-terminal-reporter --disable-pytest-warnings --driver Custom_Driver --driver-impl appium --appium-capability app ... --appium-capability platformName Android --appium-capability platformVersion '7.0' --capability env Android --capability os_version 7.0 --appium-capability deviceName device  --tags="" --variables variables.json --variables i18n.json
+  ``` 
   
 ### Parallel testing
  - Just add the `-n=3 --dist=loadscope` args and remove `--gherkin-terminal-reporter` as this reporting type is not compatible with parallel testing
@@ -66,27 +71,27 @@ In order to get the tests to run locally, you need to install the following piec
 - Chrome
 ```
 Script Path = [UI_TESTS_PATH]
-Additional Arguments = -vv --gherkin-terminal-reporter --driver Chrome --driver-path ./selenium_drivers/chromedriver_mac --variables variables.json
+Additional Arguments = -vv --gherkin-terminal-reporter --driver Chrome --driver-path ./selenium_drivers/chromedriver_mac --variables variables.json --variables i18n.json
 Python Interpreter = 'Previously created virtualenv'
 Working Directory = [UI_TESTS_PATH]
 ```
 - Firefox
 ```
 Script Path = [UI_TESTS_PATH]
-Additional Arguments = -vv --gherkin-terminal-reporter --driver Firefox --driver-path ./selenium_drivers/geckodriver_mac --variables variables.json
+Additional Arguments = -vv --gherkin-terminal-reporter --driver Firefox --driver-path ./selenium_drivers/geckodriver_mac --variables variables.json --variables i18n.json
 Python Interpreter = 'Previously created virtualenv'
 Working Directory = [UI_TESTS_PATH]
 ```
  - BrowserStack execution arguments based on env (just replace 'Additional Arguments' with correct value:
  ```
- Android App: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'Google Pixel 3 XL' --capability os_version '9.0' --capability app 'bs://[app_ID]' --capability browserstack.appium_version '1.10.0' --variables variables.json
- Android Web: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'Google Pixel 3 XL' --capability os_version '9.0' --capability base_url http://localhost:9002 --variables variables.json
- iOS App: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'iPhone XS' --capability os_version '12.0' --capability app 'bs://[app_ID]' --capability browserstack.appium_version '1.10.0' --variables variables.json
- iOS Web: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability device 'iPad Pro 12.9 2018' --capability os_version '12.0' --capability base_url http://bs-local.com:8080 --variables variables.json
- IE: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'IE' --capability browser_version '11' --capability base_url http://localhost:8080 --variables variables.json 
- Edge: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'Edge' --capability browser_version '18.0' --capability base_url http://localhost:8080 --variables variables.json
- Chrome: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'Chrome' --capability browser_version '72' --capability base_url http://localhost:8080 --variables variables.json
- Safari: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'OS X' --capability os_version 'Mojave' --capability browser 'Safari' --capability browser_version '12.0' --capability base_url http://bs-local.com:8080 --variables variables.json
+ Android App: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'Google Pixel 3 XL' --capability os_version '9.0' --capability app 'bs://[app_ID]' --capability browserstack.appium_version '1.10.0' --variables variables.json --variables i18n.json
+ Android Web: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'Google Pixel 3 XL' --capability os_version '9.0' --capability base_url http://localhost:9002 --variables variables.json --variables i18n.json
+ iOS App: -vv --gherkin-terminal-reporter --driver BrowserStack --capability device 'iPhone XS' --capability os_version '12.0' --capability app 'bs://[app_ID]' --capability browserstack.appium_version '1.10.0' --variables variables.json --variables i18n.json
+ iOS Web: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability device 'iPad Pro 12.9 2018' --capability os_version '12.0' --capability base_url http://bs-local.com:8080 --variables variables.json --variables i18n.json
+ IE: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'IE' --capability browser_version '11' --capability base_url http://localhost:8080 --variables variables.json --variables i18n.json
+ Edge: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'Edge' --capability browser_version '18.0' --capability base_url http://localhost:8080 --variables variables.json --variables i18n.json
+ Chrome: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'Windows' --capability os_version '10' --capability browser 'Chrome' --capability browser_version '72' --capability base_url http://localhost:8080 --variables variables.json --variables i18n.json
+ Safari: -vv --gherkin-terminal-reporter --export_results --driver BrowserStack --capability os 'OS X' --capability os_version 'Mojave' --capability browser 'Safari' --capability browser_version '12.0' --capability base_url http://bs-local.com:8080 --variables variables.json --variables i18n.json
  ```
 2. Run or Debug with the above configurations
   
@@ -135,10 +140,10 @@ Note: Please follow instructions for generating user_key: http://docs.gurock.com
 - Run: 
 
 **To import/update test Scenarios for ALL feature files**
-- ```python -m pytest -vv --export_tests_path "features" --variables variables.json```
+- ```python -m pytest -vv --export_tests_path "features" --variables variables.json --variables i18n.json```
  
 **To import/update test Scenarios for INDIVIDUAL .feature file**
-- ```python -m pytest -vv --export_tests_path "features/[DIR_NAME]/[FILE_NAME].feature" --variables variables.json``` 
+- ```python -m pytest -vv --export_tests_path "features/[DIR_NAME]/[FILE_NAME].feature" --variables variables.json --variables i18n.json``` 
 
 ## Implementation details
 - Each *.feature* file is a product functionality

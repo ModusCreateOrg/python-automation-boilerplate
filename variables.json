@@ -33,6 +33,15 @@
         }
     },
     "appium": {
+        "deviceReadyTimeout": 60,
+        "newCommandTimeout": 120,
+        "launchTimeout": 60000,
+        "appWaitDuration": 60000,
+        "webkitResponseTimeout": 60000,
+        "databaseEnabled": false,
+        "webStorageEnabled": false
+    },
+    "appium_hybrid": {
         "noReset": false,
         "fullReset": true,
         "autoGrantPermissions": true,
