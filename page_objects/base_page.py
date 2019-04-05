@@ -1,3 +1,5 @@
+from selenium.webdriver.support import expected_conditions as ec
+
 from webdriver.custom_wait import CustomWait
 
 
@@ -9,7 +11,7 @@ class BasePage:
         self.wait = CustomWait(self.selenium)
 
     def open(self, **kwargs):
-        pass
+        self.selenium.get('%s/' % self.base_url)
 
     def is_loaded(self, **kwargs):
-        pass
+        self.wait.until(ec.url_matches('%s/' % self.base_url))
