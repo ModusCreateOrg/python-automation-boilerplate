@@ -9,6 +9,7 @@ pytest==4.2.0
 pytest-base-url==1.4.1
 pytest-bdd==3.1.0
 -e git://github.com/popescunsergiu/pytest-selenium.git@master#egg=pytest_selenium
+-e git://github.com/popescunsergiu/pytest-testrail.git@master#egg=pytest_testrail
 pytest-xdist==1.26.1
 python-dateutil==2.7.5
 pyyaml==3.13

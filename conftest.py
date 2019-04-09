@@ -4,14 +4,15 @@ from copy import copy
 
 import pytest
 
-from testrail.testrail_api import TestRailAPI
-from testrail.testrail_utils import export_tests, export_tests_results
+from pytest_testrail.testrail_api import TestRailAPI
+from pytest_testrail.testrail_utils import export_tests, export_tests_results
 from utils.gherkin_utils import get_feature, get_feature_files_path
 from webdriver import custom_driver
 from webdriver.custom_webdriver import WebDriverCustom
 
 pytest_plugins = [
     'pytest_selenium',
+    'pytest_testrail',
     'tests/test_assertions',
     'tests/test_common'
 ]
