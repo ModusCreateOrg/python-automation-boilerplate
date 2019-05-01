@@ -5,12 +5,12 @@ from page_objects.home_page import HomePage
 scenarios('../features/home.feature', strict_gherkin=False)
 
 
-@then(parsers.re('What user sees is "(?P<text>(.*)+)"'))
-@then(parsers.re('Page innerText is "(?P<text>(.*)+)"'))
+@then(parsers.re('What user sees is "(?P<text>.*)"'), converters=dict(text=str))
+@then(parsers.re('Element innerText is "(?P<text>.*)"'), converters=dict(text=str))
 def inner_text_validation(selenium, base_url, variables, text):
     HomePage(selenium, base_url, variables['en']).inner_text_validation(text)
 
 
-@then(parsers.re('Page textContent is "(?P<text>(.*)+)"'))
+@then(parsers.re('Element textContent is "(?P<text>.*)"'), converters=dict(text=str))
 def text_content_validation(selenium, base_url, variables, text):
     HomePage(selenium, base_url, variables['en']).text_content_validation(text)

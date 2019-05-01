@@ -4,7 +4,7 @@ from page_objects.home_page import HomePage
 from utils.utils import get_file_path
 
 
-@given(parsers.re('User navigates to "(?P<filename>(.*)+)" homepage'))
+@given(parsers.re('User navigates to "(?P<filename>.*)" homepage'))
 def navigate_to_homepage(selenium, base_url, variables, filename):
     is_mobile_web = True if 'platformName' in selenium.desired_capabilities \
                             and (selenium.desired_capabilities['platformName'].lower() == 'ios'

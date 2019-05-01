@@ -8,11 +8,11 @@ Feature: innerText vs textContent
   @s1 @automated @innerText
   Scenario: innerText value is what you see
     Given User navigates to "scripts/demo_app.html" homepage
-    Then Page innerText is "MODUS CREATE"
+    Then Element innerText is "MODUS CREATE"
 
 
   @s1 @automated @textContent
   Scenario: textContent value is not what you see
     Given User navigates to "scripts/demo_app.html" homepage
-    Then Page textContent is "Modus Create"
+    Then Element textContent is "Modus Create"
     Then What user sees is "MODUS CREATE"
