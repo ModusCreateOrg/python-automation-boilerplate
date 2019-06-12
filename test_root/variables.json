@@ -1,0 +1,83 @@
+{
+    "driver": {
+        "implicit_wait_time": 30,
+        "set_page_load_timeout": 30,
+        "timeout": 30
+    },
+    "selenium": {
+        "chrome": {
+            "browser": "Chrome",
+            "os": "Windows",
+            "resolution": "1920x1080"
+        },
+        "edge": {
+            "browser": "Edge",
+            "os": "Windows",
+            "resolution": "1920x1080"
+        },
+        "ie": {
+            "browser": "IE",
+            "os": "Windows",
+            "resolution": "1920x1080"
+        },
+        "safari": {
+            "browser": "Safari",
+            "os": "Mac",
+            "resolution": "1920x1080"
+        },
+        "iphone": {
+            "browser": "Remote"
+        },
+        "ipad": {
+            "browser": "Remote"
+        }
+    },
+    "appium": {
+        "noReset": false,
+        "fullReset": true,
+        "autoGrantPermissions": true,
+        "deviceReadyTimeout": 60,
+        "newCommandTimeout": 120,
+        "launchTimeout": 60000,
+        "appWaitDuration": 60000,
+        "webkitResponseTimeout": 60000,
+        "databaseEnabled": false,
+        "webStorageEnabled": false
+    },
+    "browserstack": {
+        "selenium": {
+            "realMobile": true,
+            "deviceOrientation": "portrait",
+            "browserstack.selenium_version": "3.14.0",
+            "browserstack.debug": false,
+            "browserstack.timezone": "UTC",
+            "resolution": "1920x1080",
+            "browserstack.local": true
+        },
+        "appium": {
+            "noReset": false,
+            "fullReset": true,
+            "autoGrantPermissions": true,
+            "deviceReadyTimeout": 60,
+            "newCommandTimeout": 120,
+            "launchTimeout": 60000,
+            "appWaitDuration": 60000,
+            "webkitResponseTimeout": 60000,
+            "databaseEnabled": false,
+            "webStorageEnabled": false,
+            "realMobile": true,
+            "deviceOrientation": "portrait",
+            "browserstack.appium_version": "1.10.0",
+            "browserstack.debug": false,
+            "browserstack.timezone": "UTC",
+            "browserstack.local": false
+        }
+    },
+    "project": {
+        "id": 5,
+        "name": "EBPD",
+        "language": "en",
+        "tags": "",
+        "test_plan": "Regression_Testing-Automation"
+    }
+}
