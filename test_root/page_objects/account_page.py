@@ -56,4 +56,4 @@ class AccountPage(BasePage):
         self.__email_field_input.send_keys(email)
 
     def check_email(self):
-        self.__check_button().click()
+        self.__check_button.click()

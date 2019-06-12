@@ -51,10 +51,7 @@ To delete a venv you can run: `pyenv virtualenv-delete my-virtual-env`
   For more info please see: https://www.browserstack.com/local-testing#command-line
 - Upload app to BrowserStack:
   curl -u "USERNAME:ACCESS_KEY" -X POST https://api-cloud.browserstack.com/app-automate/upload -F "file=@/path/to/app/file/Application-debug.apk" -F 'data={"custom_id": "MyApp"}'
-  curl -u "sergiupopescu1:JnSVjFH4yXDtLfQdEZqz" -X POST https://api-cloud.browserstack.com/app-automate/upload -F "file=@/Users/sergiupopescu/ModusCreate/Python-Automation-Boilerplate/test_root/scripts/Beep.ipa" -F 'data={"custom_id": "MyApp"}'
-  curl -u "sergiupopescu1:JnSVjFH4yXDtLfQdEZqz" -X POST https://api-cloud.browserstack.com/app-automate/upload -F "file=@/Users/sergiupopescu/ModusCreate/Python-Automation-Boilerplate/test_root/scripts/Beep.apk" -F 'data={"custom_id": "MyApp"}'
-  ipa: bs://5459a0d547c6b81cb4da3b8253a4235d50a981a8
-  apk: bs://3795e0d92ebf94fe3ac92a0db04565b891a1e864
+
   
 ### Local Terminal run
  - Chrome example:
