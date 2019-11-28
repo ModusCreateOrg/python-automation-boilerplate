@@ -1,0 +1,12 @@
+__pycache__
+.cache
+.DS_Store
+.eggs
+.idea
+.pytest_cache
+.tox
+*.egg-info/
+*.pyc
+build
+dist
+Pipfile*
