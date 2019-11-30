@@ -1,0 +1,25 @@
+Appium-Python-Client==0.48
+assertpy==0.15
+browserstack-local==1.2.2
+configparser==4.0.2
+diffimg==0.2.3
+Faker==2.0.4
+gherkin-official==4.1.3
+imutils==0.5.3
+opencv-python==4.1.2.30
+py==1.8.0
+pylint==2.4.4
+pytest==5.3.1
+pytest-base-url==1.4.1
+pytest-bdd==3.2.1
+pytest-selenium==1.17.0
+# -e git://github.com/ModusCreateOrg/python-automation-boilerplate.git@v0.3-pytest-testrail#egg=pytest_testrail
+git+ssh://git@github.com/ModusCreateOrg/python-automation-boilerplate.git@v0.3-pytest-testrail#egg=pytest_testrail
+pytest-xdist==1.30.0
+python-dateutil==2.8.1
+PyYAML==5.1.2
+requests==2.22.0
+scikit-image==0.16.2
+selenium==3.141.0
+Selenium-Screenshot==1.5.0
+SSIM-PIL==1.0.10

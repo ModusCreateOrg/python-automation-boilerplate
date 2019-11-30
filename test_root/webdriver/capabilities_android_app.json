@@ -1,0 +1,26 @@
+{
+    "capabilities": {
+        "app": "bs://511d31318fc3f942a66007170a82f7e725482ca7",
+        "device": "Google Pixel 3",
+        "os_version": "9.0",
+        "realMobile": "true",
+        "noReset": false,
+        "fullReset": true,
+        "autoGrantPermissions": true,
+        "deviceReadyTimeout": 60,
+        "newCommandTimeout": 120,
+        "launchTimeout": 60000,
+        "appWaitDuration": 60000,
+        "webkitResponseTimeout": 60000,
+        "databaseEnabled": false,
+        "webStorageEnabled": false,
+        "browserstack.debug": false,
+        "browserstack.timezone": "UTC",
+        "browserstack.local": false
+    },
+    "env": {
+        "app": true,
+        "device": "mobile",
+        "os": "android"
+    }
+}

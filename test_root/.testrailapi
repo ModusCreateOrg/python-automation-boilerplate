@@ -1,0 +1,5 @@
+[credentials]
+email=sergiu.popescu@moduscreate.com
+key=
+url=https://moduscreateinc.testrail.io
+verify_ssl=True

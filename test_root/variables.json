@@ -1,0 +1,14 @@
+{
+    "driver": {
+        "implicit_wait_time": 45,
+        "set_page_load_timeout": 60,
+        "timeout": 45
+    },
+    "project": {
+        "id": 8,
+        "name": "HS2",
+        "language": "en",
+        "tags": "",
+        "test_plan": "Regression_Testing-Automation_TODO"
+    }
+}

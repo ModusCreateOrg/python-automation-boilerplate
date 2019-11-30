@@ -1,0 +1,22 @@
+{
+    "capabilities": {
+        "device": "iPhone XS",
+        "os_version": "13",
+        "realMobile": "true",
+        "deviceReadyTimeout": 60,
+        "newCommandTimeout": 120,
+        "launchTimeout": 60000,
+        "appWaitDuration": 60000,
+        "webkitResponseTimeout": 60000,
+        "databaseEnabled": false,
+        "webStorageEnabled": false,
+        "browserstack.debug": false,
+        "browserstack.timezone": "UTC",
+        "browserstack.local": false
+    },
+    "env": {
+        "app": false,
+        "device": "mobile",
+        "os": "ios"
+    }
+}
