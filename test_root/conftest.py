@@ -75,7 +75,7 @@ def filter_collection_by_tags(items, tags):
 
 
 def pytest_sessionstart(session):
-    pytest.globalDict['env'] = session.config._variables['env']
+    pytest.globalDict['env'] = session.config._variables['env'] if 'env' in session.config._variables else {}
 
     export_tests_path = session.config.option.export_tests_path
     export_results = session.config.option.export_results
@@ -86,8 +86,14 @@ def pytest_sessionstart(session):
     pytest.globalDict['project'] = project_variables
     pytest.globalDict['scenarios_run'] = {}
 
-    env_name = get_env_name(session.config.option.driver, session.config._capabilities)
+    pytest.globalDict['i18n'] = session.config._variables[project_variables['language']]
+
+    env_name = get_env_name(session.config._capabilities)
     pytest.globalDict['env_name'] = env_name
+
+    headless_chrome = session.config._capabilities['headless'] in ['true', 'True', '1', 'ty', 'Y'] \
+        if 'headless' in session.config._capabilities else False
+    pytest.globalDict['headless_chrome'] = headless_chrome
 
     initialize_screenshot_dirs()
     add_custom_commands()
@@ -114,14 +120,17 @@ def pytest_sessionfinish(session):
 
 def pytest_bdd_after_scenario(request, feature, scenario):
     # Adding Scenario to the list of Scenarios ran
-    if scenario.failed is False and request.config.option.export_results:
+    if request.config.option.export_results:
         add_scenario_to_run(request, scenario)
+    if request.config.option.reruns >= request.node.execution_count:
+        scenario.failed = False
+        for scenario_step in scenario.steps:
+            scenario_step.failed = False
 
 
 def pytest_bdd_step_error(request, scenario, step, exception):
     scenario.exception = exception
     scenario.failed = True
-
     # Setting Scenario and Steps statuses and exception error if the case
     flag = False
     for scenario_step in scenario.steps:
@@ -138,12 +147,8 @@ def pytest_bdd_step_error(request, scenario, step, exception):
     scenario.exception_message = exception_message
     print('Error: %s' % exception_message)
 
-    if request.config.option.export_results:
-        add_scenario_to_run(request, scenario)
-
 
 def export_feature_files(tr: TestRailAPI, project_variables: dict, export_tests_path: str):
-
     files_path = get_feature_files_path(export_tests_path)
     for file_path in files_path:
         feature = get_feature(file_path)
@@ -160,6 +165,30 @@ def add_scenario_to_run(request, scenario):
     if suite_name not in pytest.globalDict['scenarios_run']:
         pytest.globalDict['scenarios_run'][suite_name] = []
     pytest.globalDict['scenarios_run'][suite_name].append(deepcopy(scenario))
+
+
+@pytest.fixture
+def selenium(selenium):
+    selenium.set_page_load_timeout(90)
+    selenium.implicitly_wait(60)
+    selenium.set_script_timeout(60)
+    return selenium
+
+
+@pytest.fixture
+def chrome_options(chrome_options):
+    if pytest.globalDict['headless_chrome'] is True:
+        chrome_options.add_argument('--headless')
+    return chrome_options
+
+
+@pytest.fixture
+def capabilities(capabilities):
+    if capabilities['browser'] in ['Edge', 'MicrosoftEdge']:
+        capabilities['browserstack.edge.enablePopups'] = 'true'
+    if capabilities['browser'] in ['safari', 'Safari']:
+        capabilities['browserstack.safari.enablePopups'] = 'true'
+    return capabilities
 
 
 @pytest.fixture(scope='session')
