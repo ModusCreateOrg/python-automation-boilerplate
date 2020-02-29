@@ -34,13 +34,13 @@ In order to get the tests to run locally, you need to install the following piec
 ### Windows
 1. Install GitBash
 2. Uninstall any previous python version
-3. Install python 3.7.3 using official installation file
-4. Install virtualenv with `python3 -m pip install --user virtualenv`
-5. Create new virtual env with `python3 -m virtualenv .venv`
-6. Activate new virtual env with `source ./.venv/bin/activate`
+3. Install python 3.7.5 using official installation file
+4. Install virtualenv with `python -m pip install --user virtualenv`
+5. Create new virtual env with `python -m virtualenv .venv`
+6. Activate new virtual env with `source ./.venv/Scripts/activate`
 7. Install all project dependencies with `pip install -r requirements.txt`
 8. Check python version used with `which python`. <br />
-   Shall be `[PROJECT_DIR]/tests/UI/.venv_boilerplate/bin/python`
+   Shall be `[PROJECT_DIR]/tests/UI/.venv_boilerplate/Scripts/python`
 
 ## Test execution
 

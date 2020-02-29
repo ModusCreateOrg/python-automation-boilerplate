@@ -75,9 +75,6 @@ def filter_collection_by_tags(items, tags):
 
 
 def pytest_sessionstart(session):
-    # will deprecate
-    pytest.globalDict['implicit_wait_time'] = session.config._variables['driver']['implicit_wait_time']
-
     pytest.globalDict['env'] = session.config._variables['env']
 
     export_tests_path = session.config.option.export_tests_path

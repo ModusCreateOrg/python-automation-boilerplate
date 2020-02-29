@@ -1,3 +1,4 @@
+import time
 from time import sleep
 
 import pytest
@@ -63,10 +64,17 @@ class CustomWait:
         wait = WebDriverWait(self.driver, time_to_wait)
         return wait.until(CEC.wait_for_the_attribute_value(element, attribute, value))
 
-    def until(self, condition, time=15):
-        wait = WebDriverWait(self.driver, time)
-        result = wait.until(CEC.wait_for_condition(condition))
-        return result
+    def wait_for_the_attribute_contain_value(self, element, attribute, value, time_to_wait=10):
+        wait = WebDriverWait(self.driver, time_to_wait)
+        return wait.until(CEC.wait_for_the_attribute_contain_value(element, attribute, value))
+
+    @staticmethod
+    def wait_until(some_predicate, timeout=15, period=0.25, *args, **kwargs):
+        must_end = time.time() + timeout
+        while time.time() < must_end:
+            if some_predicate(*args, **kwargs): return True
+            time.sleep(period)
+        return False
 
     # pylint: disable=no-member
     @staticmethod

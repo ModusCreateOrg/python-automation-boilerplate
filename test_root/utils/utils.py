@@ -2,86 +2,29 @@
 # pylint: disable=no-member
 import errno
 import json
-from pathlib import Path
+import os
 from os import path, strerror
+from pathlib import Path
 
 import pytest
 
 
-def get_env_name(driver_name: str, caps: dict):
-    if driver_name == 'BrowserStack':
-        os_name = caps['os'] if 'os' in caps else caps['device']
-        os_version = '_%s' % caps['os_version']
-        browser_name = '-%s' % caps['browser'] if 'browser' in caps else '-web'
-    elif driver_name == 'BrowserStack_app':
-        os_name = caps['device']
-        os_version = '_%s' % caps['os_version']
-        browser_name = '-app'
-    elif driver_name in ['Appium', 'Custom_Driver']:
-        os_name = caps['deviceName'] if 'deviceName' in caps else caps['device'] \
-            if 'device' in caps else caps['os']
-        os_version = '_%s' % caps['platformVersion'] if 'platformVersion' in caps else caps['os_version'] \
-            if 'os_version' in caps else caps['browser_version']
-        browser_name = '-app' if 'deviceName' in caps else caps['browser'] \
-            if 'browser' in caps else '-native-browser'
-    else:
-        import platform
-        os_name = 'macOS' if platform.platform().__contains__('Darwin') else 'Windows'
-        os_version = '_Mojave' if platform.platform().__contains__('Darwin') else '_10'
-        browser_name = '-%s' % driver_name
-    return '%s%s%s' % (os_name, os_version, browser_name)
+def get_env_name(caps: dict):
+    os = caps['os'] if 'os' in caps else None
+    os_version = caps['os_version'] if 'os_version' in caps else ''
+    env = caps['browser'] if 'browser' in caps else caps['device'] if 'device' in caps else ''
+
+    if os is None:
+        return '%s - %s' % (env, os_version)
+    return '%s %s - %s' % (os, os_version, env)
 
 
 def initialize_screenshot_dirs():
     import os
     project_pwd = os.path.dirname(__file__)
-    pytest.globalDict['base_screenshot_dir'] = project_pwd.replace('/utils', '') + '/screenshots'
-    pytest.globalDict['actual_screenshot_dir'] = project_pwd.replace('/utils', '') + '/screenshots'
-    pytest.globalDict['diff_screenshot_dir'] = project_pwd.replace('/utils', '') + '/screenshots'
-    if not os.path.exists(pytest.globalDict['actual_screenshot_dir']):
-        os.makedirs(pytest.globalDict['actual_screenshot_dir'])
-    if not os.path.exists(pytest.globalDict['diff_screenshot_dir']):
-        os.makedirs(pytest.globalDict['diff_screenshot_dir'])
-
-
-def get_internationalization_values():
-    raw_data = read_file('i18n.json')
-    return raw_data
-
-
-def get_users_values():
-    raw_data = read_file('test_data/test_data.json')
-    return raw_data['USERS']
-
-
-def get_element_error_color_values():
-    raw_data = read_file('test_data/test_data.json')
-    return raw_data['ELEMENT_COLORS']
-
-
-def get_password_masking_values():
-    raw_data = read_file('test_data/test_data.json')
-    return raw_data['PASSWORD_FIELD_TYPE']
-
-
-def get_driver_params():
-    raw_data = read_file('constants.json')
-    return raw_data['driver']
-
-
-def get_testrail_params():
-    raw_data = read_file('constants.json')
-    return raw_data['testrail_old']
-
-
-def get_privacy_text_values():
-    privacy_raw_data = read_file('test_data/text_content/eula_privacy_policy.txt')
-    return privacy_raw_data
-
-
-def get_terms_text_values():
-    terms_raw_data = read_file('test_data/text_content/eula_terms_and_conditions_content.txt')
-    return terms_raw_data
+    pytest.globalDict['base_screenshot_dir'] = project_pwd.replace('/utils', '') + '/screenshots/base'
+    pytest.globalDict['actual_screenshot_dir'] = project_pwd.replace('/utils', '') + '/screenshots/actual'
+    pytest.globalDict['diff_screenshot_dir'] = project_pwd.replace('/utils', '') + '/screenshots/diff'
 
 
 def read_file(file_name):
@@ -105,15 +48,18 @@ def get_file_path(file_name):
     return path_object.resolve()
 
 
-def compare_images(base_screenshot_url, actual_screenshot_url, diff_screenshot_url):
+def compare_images(image_b, base_screenshot_url, actual_screenshot_url, diff_screenshot_url, base_score):
     from skimage.measure import compare_ssim
     import imutils
     import cv2
 
     # load the two input images
     image_a = cv2.imread(base_screenshot_url)
-    image_b = cv2.imread(actual_screenshot_url)
-    cv2.imwrite(actual_screenshot_url, image_b)
+
+    if image_a is None:
+        os.makedirs(actual_screenshot_url[:actual_screenshot_url.rfind('/')], exist_ok=True)
+        cv2.imwrite(actual_screenshot_url, image_b)
+        raise AssertionError('There is no base image for: %s' % base_screenshot_url)
 
     # convert the images to grayscale
     gray_a = cv2.cvtColor(image_a, cv2.COLOR_BGR2GRAY)
@@ -121,9 +67,16 @@ def compare_images(base_screenshot_url, actual_screenshot_url, diff_screenshot_u
 
     # compute the Structural Similarity Index (SSIM) between the two
     # images, ensuring that the difference image is returned
-    (score, diff) = compare_ssim(gray_a, gray_b, full=True)
+    if gray_a.shape != gray_b.shape:
+        os.makedirs(actual_screenshot_url[:actual_screenshot_url.rfind('/')], exist_ok=True)
+        cv2.imwrite(actual_screenshot_url, image_b)
+        raise AssertionError('Base: %s and\n Actual: %s\n have different sized' % (base_screenshot_url, actual_screenshot_url))
 
-    if score != 1.0:
+    (score, diff) = compare_ssim(gray_a, gray_b, full=True)
+    if score < base_score:
+        os.makedirs(actual_screenshot_url[:actual_screenshot_url.rfind('/')], exist_ok=True)
+        os.makedirs(diff_screenshot_url[:diff_screenshot_url.rfind('/')], exist_ok=True)
+        cv2.imwrite(actual_screenshot_url, image_b)
         diff = (diff * 255).astype("uint8")
 
         # threshold the difference image, followed by finding contours to
@@ -143,3 +96,15 @@ def compare_images(base_screenshot_url, actual_screenshot_url, diff_screenshot_u
         cv2.imwrite(diff_screenshot_url, image_b)
 
     return score
+
+
+def get_horizontal_spacing(elem_1, elem_2):
+    spacing = 0  # TODO
+
+    return spacing
+
+
+def get_vertical_spacing(elem_1, elem_2):
+    spacing = 0  # TODO
+
+    return spacing

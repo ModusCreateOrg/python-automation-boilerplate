@@ -1,4 +1,4 @@
-from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
+from selenium.common.exceptions import WebDriverException
 
 
 # pylint: disable=invalid-name
@@ -40,7 +40,7 @@ class visibility_of_child_element_located:
     def __call__(self, driver):
         try:
             return _child_element_if_visible(self.parent_element.find_element(*self.locator))
-        except StaleElementReferenceException:
+        except WebDriverException:
             return False
 
 
@@ -57,7 +57,7 @@ class invisibility_of_child_element_located:
     def __call__(self, driver):
         try:
             return _child_element_if_visible(self.parent_element.find_element(*self.locator), False)
-        except (NoSuchElementException, StaleElementReferenceException):
+        except WebDriverException:
             return True
 
 
@@ -72,7 +72,22 @@ class wait_for_the_attribute_value:
         try:
             element_attribute = self.element.get_attribute(self.attribute)
             return element_attribute == self.value
-        except (NoSuchElementException, StaleElementReferenceException):
+        except WebDriverException:
+            return False
+
+
+# pylint: disable=invalid-name
+class wait_for_the_attribute_contain_value:
+    def __init__(self, element, attribute, value):
+        self.element = element
+        self.attribute = attribute
+        self.value = value
+
+    def __call__(self, driver):
+        try:
+            element_attribute = self.element.get_attribute(self.attribute)
+            return self.value in element_attribute
+        except WebDriverException:
             return False
 
 
