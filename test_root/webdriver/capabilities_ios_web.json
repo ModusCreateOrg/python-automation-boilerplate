@@ -1,8 +1,8 @@
 {
     "capabilities": {
-        "device": "iPhone XS",
-        "os_version": "13",
         "realMobile": "true",
+        "autoAcceptAlerts": "true",
+        "browserstack.appium_version": "1.16.0",
         "deviceReadyTimeout": 60,
         "newCommandTimeout": 120,
         "launchTimeout": 60000,

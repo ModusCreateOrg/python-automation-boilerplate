@@ -10,10 +10,10 @@ import pytest
 from pytest_testrail.testrail_api import TestRailAPI
 from pytest_testrail.testrail_utils import export_tests, export_tests_results
 
-from tests.test_context import *
-from tests.test_actions import *
-from tests.test_assertions import *
-from utils.gherkin_utils import get_feature_files_path, get_feature
+# from tests.test_assertions import *
+# from tests.test_common import *
+from utils.env_variables import EnvVariables
+from utils.gherkin_utils import get_feature, get_feature_files_path
 from utils.utils import initialize_screenshot_dirs, get_env_name
 from webdriver.custom_commands import add_custom_commands
 
@@ -172,6 +172,8 @@ def selenium(selenium):
     selenium.set_page_load_timeout(90)
     selenium.implicitly_wait(60)
     selenium.set_script_timeout(60)
+
+    selenium.delete_all_cookies()
     return selenium
 
 
@@ -182,15 +184,6 @@ def chrome_options(chrome_options):
     return chrome_options
 
 
-@pytest.fixture
-def capabilities(capabilities):
-    if capabilities['browser'] in ['Edge', 'MicrosoftEdge']:
-        capabilities['browserstack.edge.enablePopups'] = 'true'
-    if capabilities['browser'] in ['safari', 'Safari']:
-        capabilities['browserstack.safari.enablePopups'] = 'true'
-    return capabilities
-
-
 @pytest.fixture(scope='session')
 def language(request):
     config = request.config
@@ -198,3 +191,9 @@ def language(request):
     if language is not None:
         return language
     return None
+
+
+@pytest.fixture(scope='session')
+def env_variables(request):
+    env_vars_file_path = "%s/.local.env" % request.session.config.known_args_namespace.confcutdir
+    return EnvVariables(env_vars_file_path)

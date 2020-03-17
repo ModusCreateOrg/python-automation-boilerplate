@@ -1,8 +1,8 @@
 {
     "capabilities": {
-        "device": "Google Pixel 3",
-        "os_version": "9.0",
         "realMobile": "true",
+        "autoAcceptAlerts": "true",
+        "browserstack.appium_version": "1.16.0",
         "noReset": false,
         "fullReset": true,
         "autoGrantPermissions": true,

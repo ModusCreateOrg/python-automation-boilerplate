@@ -22,8 +22,8 @@ In order to get the tests to run locally, you need to install the following piec
    export PATH="$PYENV_ROOT/shims:$PATH"
    export PATH="$PYENV_ROOT/completions/pyenv.bash:$PATH"
     ```
-3. Install python 3.7.3 with `pyenv install 3.7.3`
-4. Set python version 3.7.3 to be used globally with `pyenv global 3.7.3`
+3. Install python 3.7.5 with `pyenv install 3.7.5`
+4. Set python version 3.7.5 to be used globally with `pyenv global 3.7.5`
 5. Install virtualenv with `python3 -m pip install --user virtualenv`
 6. Create new virtual env with `python3 -m virtualenv .venv`
 7. Activate new virtual env with `source ./.venv/bin/activate`

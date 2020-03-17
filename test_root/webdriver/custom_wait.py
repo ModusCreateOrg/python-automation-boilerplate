@@ -2,6 +2,7 @@ import time
 from time import sleep
 
 import pytest
+from assertpy import assert_that
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -69,12 +70,13 @@ class CustomWait:
         return wait.until(CEC.wait_for_the_attribute_contain_value(element, attribute, value))
 
     @staticmethod
-    def wait_until(some_predicate, timeout=15, period=0.25, *args, **kwargs):
+    def wait_until(some_predicate, timeout=20, period=0.25, description=""):
         must_end = time.time() + timeout
         while time.time() < must_end:
-            if some_predicate(*args, **kwargs): return True
+            if some_predicate():
+                return True
             time.sleep(period)
-        return False
+        assert_that(some_predicate(), description=description).is_true()
 
     # pylint: disable=no-member
     @staticmethod
