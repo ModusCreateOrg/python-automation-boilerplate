@@ -20,7 +20,7 @@ git+ssh://git@github.com/ModusCreateOrg/python-automation-boilerplate.git@v0.3-p
 pytest-xdist==1.31.0
 python-dateutil==2.8.1
 PyYAML==5.3
-requests==2.23.0
+requests==2.31.0
 scikit-image==0.16.2
 selenium==3.141.0
 Selenium-Screenshot==1.6.0
