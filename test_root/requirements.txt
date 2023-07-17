@@ -19,7 +19,7 @@ pytest-selenium==1.17.0
 git+ssh://git@github.com/ModusCreateOrg/python-automation-boilerplate.git@v0.3-pytest-testrail#egg=pytest_testrail
 pytest-xdist==1.31.0
 python-dateutil==2.8.1
-PyYAML==5.3
+PyYAML==5.4
 requests==2.23.0
 scikit-image==0.16.2
 selenium==3.141.0
